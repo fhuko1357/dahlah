@@ -1,20 +1,20 @@
 ---
 apiVersion: apps/v1
-kind: deployment
+kind: Deployment
 metadata:
-  name: myapp
+  name: ngin
 spec:
-  replicas: 30
+  replicas: 10
   selector:
     matchLabels:
-      app: myapp
+      app: ngin
   template:
     metadata:
       labels:
-        app: myapp
+        app: ngin
     spec:
       containers:
-        - name: myapp
-          image: 992382513265.dkr.ecr.us-east-2.amazonaws.com/kampret:latest
+        - name: ngin
+          image: gcr.io/qwiklabs-gcp-01-d783dfe45071/vitcuk:latest
           ports:
             - containerPort: 80
