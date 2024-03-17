@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: ngin
-          image: gcr.io/qwiklabs-gcp-01-d783dfe45071/vitcuk:latest
+          image: gcr.io/qwiklabs-gcp-01-d783dfe45071/vitcuka:latest
           ports:
             - containerPort: 80
